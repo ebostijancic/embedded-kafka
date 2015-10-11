@@ -18,11 +18,11 @@ public class Producer {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
-        producer = new KafkaProducer<String,String>(props);
+        producer = new KafkaProducer<>(props);
     }
 
     public Future<RecordMetadata> send(String topic, String key, String value){
-        ProducerRecord<String,String> producerRecord = new ProducerRecord<String,String>(topic, key, value);
+        ProducerRecord<String,String> producerRecord = new ProducerRecord<>(topic, key, value);
         return producer.send(producerRecord);
     }
 

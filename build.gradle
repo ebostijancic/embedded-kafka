@@ -9,6 +9,7 @@ dependencies {
     compile "org.slf4j:slf4j-api:${slf4jVersion}"
     compile "org.apache.kafka:kafka_2.10:${kafkaVersion}"
     compile "org.apache.kafka:kafka-clients:${kafkaVersion}"
+    compile "com.google.guava:guava:${guavaVersion}"
 
     testCompile "junit:junit:${junitVersion}"
     testCompile "org.spockframework:spock-core:${spockVersion}"
