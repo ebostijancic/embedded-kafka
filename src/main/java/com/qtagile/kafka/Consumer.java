@@ -14,7 +14,7 @@ public class Consumer {
     private final String topic;
 
     private KafkaStream<byte[], byte[]> stream;
-    private ConsumerIterator iterator;
+    private ConsumerIterator<byte[], byte[]> iterator;
 
     public Consumer(String topic){
         Properties properties = new Properties();
@@ -34,6 +34,6 @@ public class Consumer {
     public Optional<String> read(){
         return Optional.of(iterator)
                 .filter(i -> iterator.hasNext())
-                .map(i -> iterator.next().message().toString());
+                .map(i -> new String(iterator.next().message()));
     }
 }
