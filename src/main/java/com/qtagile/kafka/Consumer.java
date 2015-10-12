@@ -21,7 +21,7 @@ public class Consumer {
         properties.put("zookeeper.connect", "localhost:2181");
         properties.put("group.id", "testgroup");
         properties.put("zookeeper.session.timeout.ms", "500");
-        properties.put("zookeeper.sync.time..ms", "250");
+        properties.put("zookeeper.sync.time.ms", "250");
         properties.put("auto.commit.interval.ms", "1000");
 
         consumerConnector = kafka.consumer.Consumer.createJavaConsumerConnector(new ConsumerConfig(properties));
