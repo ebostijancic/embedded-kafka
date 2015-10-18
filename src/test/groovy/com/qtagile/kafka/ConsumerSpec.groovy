@@ -6,32 +6,37 @@ import spock.lang.Specification
 class ConsumerSpec extends Specification {
     def static zookeeperProperties = new Properties()
     def static kafkaProperties = new Properties()
+    def static consumerProperties = new Properties()
 
-    def static embeddedZookeper
-    def static embeddedKafka
-    def static producer = new Producer(9090)
+    def embeddedKafkaServer
+    def producer
+    def consumer
 
     def setupSpec(){
         zookeeperProperties.load(getClass().getClassLoader().getResourceAsStream("zookeeper.properties"))
-        embeddedZookeper = new EmbeddedZookeeper(zookeeperProperties)
-        embeddedZookeper.start()
-
         kafkaProperties.load(getClass().getClassLoader().getResourceAsStream("kafka.properties"))
-        embeddedKafka = new EmbeddedKafka(kafkaProperties)
-        embeddedKafka.start()
+        consumerProperties.load(getClass().getClassLoader().getResourceAsStream("consumer.properties"))
+    }
+
+    def setup(){
+        embeddedKafkaServer = new EmbeddedKafkaServer(zookeeperProperties, kafkaProperties)
+        embeddedKafkaServer.start()
+
+        producer = new Producer(9090)
+        consumer = new Consumer(consumerProperties, "test")
+    }
+
+    def cleanup(){
+        producer.shutdown()
+        consumer.shutdown()
+        embeddedKafkaServer.stop()
     }
 
     def cleanupSpec(){
-        producer.shutdown()
-        embeddedKafka.stop()
-        embeddedZookeper.stop()
+        new File('.tmp').deleteDir()
     }
 
-    @Ignore
     def "shouldn't get messages from an empty queue"(){
-        given:
-        def consumer = new Consumer("test")
-
         when:
         def message = consumer.read()
 
@@ -42,7 +47,6 @@ class ConsumerSpec extends Specification {
     def "should read from the queue"(){
         given:
         producer.send("test", "key", "value")
-        def consumer = new Consumer("test")
 
         when:
         def message = consumer.read()
