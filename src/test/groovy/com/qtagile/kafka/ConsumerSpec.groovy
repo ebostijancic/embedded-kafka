@@ -1,11 +1,11 @@
 package com.qtagile.kafka
 
-import spock.lang.Ignore
 import spock.lang.Specification
 
 class ConsumerSpec extends Specification {
     def static zookeeperProperties = new Properties()
     def static kafkaProperties = new Properties()
+    def static producerProperties = new Properties()
     def static consumerProperties = new Properties()
 
     def embeddedKafkaServer
@@ -15,14 +15,15 @@ class ConsumerSpec extends Specification {
     def setupSpec(){
         zookeeperProperties.load(getClass().getClassLoader().getResourceAsStream("zookeeper.properties"))
         kafkaProperties.load(getClass().getClassLoader().getResourceAsStream("kafka.properties"))
+        producerProperties.load(getClass().getClassLoader().getResourceAsStream("producer.properties"))
         consumerProperties.load(getClass().getClassLoader().getResourceAsStream("consumer.properties"))
     }
 
     def setup(){
-        embeddedKafkaServer = new EmbeddedKafkaServer(zookeeperProperties, kafkaProperties)
+        embeddedKafkaServer = new EmbeddedKafkaServer(zookeeperProperties, kafkaProperties, producer, consumer)
         embeddedKafkaServer.start()
 
-        producer = new Producer(9090)
+        producer = new Producer(producerProperties)
         consumer = new Consumer(consumerProperties, "test")
     }
 
@@ -44,7 +45,7 @@ class ConsumerSpec extends Specification {
         !message.isPresent()
     }
 
-    def "should read from the queue"(){
+    def "should read a message from the queue"(){
         given:
         producer.send("test", "key", "value")
 
