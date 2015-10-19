@@ -38,7 +38,7 @@ public class EmbeddedZookeeper {
             try {
                 zooKeeperServer.runFromConfig(configuration);
             } catch (IOException e) {
-                logger.error("zookeeper error", e);
+                logger.error("embedded zookeeper error", e);
             }
         });
     }

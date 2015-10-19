@@ -27,6 +27,7 @@ public class Consumer {
     }
 
     public void shutdown(){
+        logger.debug("shutdown consumer");
         consumerConnector.shutdown();
     }
 
