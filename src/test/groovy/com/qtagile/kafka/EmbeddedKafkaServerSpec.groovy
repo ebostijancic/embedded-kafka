@@ -2,15 +2,13 @@ package com.qtagile.kafka
 
 import spock.lang.Specification
 
-class ConsumerSpec extends Specification {
+class EmbeddedKafkaServerSpec extends Specification {
     def static zookeeperProperties = new Properties()
     def static kafkaProperties = new Properties()
     def static producerProperties = new Properties()
     def static consumerProperties = new Properties()
 
     def embeddedKafkaServer
-    def producer
-    def consumer
 
     def setupSpec(){
         zookeeperProperties.load(getClass().getClassLoader().getResourceAsStream("zookeeper.properties"))
@@ -20,16 +18,12 @@ class ConsumerSpec extends Specification {
     }
 
     def setup(){
-        embeddedKafkaServer = new EmbeddedKafkaServer(zookeeperProperties, kafkaProperties, producer, consumer)
+        embeddedKafkaServer = new EmbeddedKafkaServer(zookeeperProperties, kafkaProperties,
+                                                      producerProperties, consumerProperties)
         embeddedKafkaServer.start()
-
-        producer = new Producer(producerProperties)
-        consumer = new Consumer(consumerProperties, "test")
     }
 
     def cleanup(){
-        producer.shutdown()
-        consumer.shutdown()
         embeddedKafkaServer.stop()
     }
 
@@ -39,7 +33,7 @@ class ConsumerSpec extends Specification {
 
     def "shouldn't get messages from an empty queue"(){
         when:
-        def message = consumer.read()
+        def message = embeddedKafkaServer.read('test')
 
         then:
         !message.isPresent()
@@ -47,10 +41,10 @@ class ConsumerSpec extends Specification {
 
     def "should read a message from the queue"(){
         given:
-        producer.send("test", "key", "value")
+        embeddedKafkaServer.send("test", "key", "value")
 
         when:
-        def message = consumer.read()
+        def message = embeddedKafkaServer.read('test')
 
         then:
         message.isPresent()
