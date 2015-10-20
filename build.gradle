@@ -24,10 +24,17 @@
 
 apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: "maven"
+
+group = "com.qtagile"
+version = projectVersion
 
 repositories {
     jcenter()
 }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
     compile "org.slf4j:slf4j-api:${slf4jVersion}"
