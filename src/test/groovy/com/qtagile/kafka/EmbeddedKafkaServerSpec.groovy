@@ -26,23 +26,10 @@ package com.qtagile.kafka
 import spock.lang.Specification
 
 class EmbeddedKafkaServerSpec extends Specification {
-    def static zookeeperProperties = new Properties()
-    def static kafkaProperties = new Properties()
-    def static producerProperties = new Properties()
-    def static consumerProperties = new Properties()
-
     def embeddedKafkaServer
 
-    def setupSpec(){
-        zookeeperProperties.load(getClass().getClassLoader().getResourceAsStream("zookeeper.properties"))
-        kafkaProperties.load(getClass().getClassLoader().getResourceAsStream("kafka.properties"))
-        producerProperties.load(getClass().getClassLoader().getResourceAsStream("producer.properties"))
-        consumerProperties.load(getClass().getClassLoader().getResourceAsStream("consumer.properties"))
-    }
-
     def setup(){
-        embeddedKafkaServer = new EmbeddedKafkaServer(zookeeperProperties, kafkaProperties,
-                                                      producerProperties, consumerProperties)
+        embeddedKafkaServer = new EmbeddedKafkaServer()
         embeddedKafkaServer.start()
     }
 
