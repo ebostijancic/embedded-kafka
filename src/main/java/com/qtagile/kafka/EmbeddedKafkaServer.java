@@ -58,6 +58,7 @@ public class EmbeddedKafkaServer {
 
             kafkaProperties.load(getClass().getClassLoader().getResourceAsStream("kafka.properties"));
             kafkaProperties.setProperty("port", kafkaPort.toString());
+            kafkaProperties.setProperty("zookeeper.connect", String.format("localhost:%d", zookeeperPort));
 
             producerProperties.load(getClass().getClassLoader().getResourceAsStream("producer.properties"));
             producerProperties.setProperty("bootstrap.servers", String.format("localhost:%d", kafkaPort));
