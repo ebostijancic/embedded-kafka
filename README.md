@@ -30,6 +30,7 @@ After that initialize and shutdown the server at the beginning and end of the te
 public void setup(){
     embeddedKafkaServer.start();
 }
+
 @After
 public void teardown(){
     embeddedKafkaServer.stop();
@@ -45,7 +46,7 @@ embeddedKafkaServer.send(TOPIC_NAME, KEY, VALUE);
 And for reading is simple as
 
 ```java
-String messsage = embeddedKafkaServer.read(TOPIC);
+String message = embeddedKafkaServer.read(TOPIC);
 ```
 
 ##License
